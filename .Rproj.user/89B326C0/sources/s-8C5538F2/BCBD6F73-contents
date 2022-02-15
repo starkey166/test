@@ -1,0 +1,135 @@
+setwd("/Users/colinsweeney/Documents/Documents/School/OSU/TA work/Ecology_3410/Lab 6")
+
+
+#Lesser Prairie Chicken Regression
+
+lpc=read.csv("lpcdata.csv",h=T)
+lpc<-read.csv("lpcdata.csv",h=T)
+lpc
+head(lpc)
+tail(lpc)
+names(lpc)
+lengthvmass=lm(mass~winglength,data=lpc)
+summary(lengthvmass)
+plot(mass~winglength,data=lpc)
+plot(mass~winglength,data=lpc, col="red",pch=19,
+     xlab="Wing length (mm)", ylab="Mass (g)",main="LPC Wing length vs Mass")
+abline(lengthvmass, col="blue")
+
+
+#Walleye Fecundity Data
+walleyefecundity=read.csv("walleye_fecundity.csv",header=TRUE)
+
+plot (fecundity~length,data=walleyefecundity, xlab="Length (mm)", ylab = "Fecundity  (# eggs)", main="Walleye fecundity vs length")
+
+loglength=log(walleyefecundity$length)
+
+logfecundity=log(walleyefecundity$fecundity)
+
+walleyefecundity=cbind(walleyefecundity,  loglength,  logfecundity)
+
+head(walleyefecundity)
+
+plot(logfecundity~loglength,data=walleyefecundity)
+
+plot(logfecundity~loglength,data=walleyefecundity,
+     pch=8,  cex=1,  col="orange",  ylab="Fecundity  (logged  #  eggs)", xlab="Length (logged mm)", main="Walleye fecundity vs length")
+
+
+# Walleye Spawning Data
+
+walleyespawning=read.csv("walleye_spawning.csv",h=T)
+
+head(walleyespawning)
+
+names(walleyespawning)
+
+barplot(walleyespawning$Maumee2004,names.arg=walleyespawning$age,ylim=c(0,20),xlab="Walleye spawner age (y)", ylab="Walleye spawner count", main="Maumee River spawners sampled in 2004")
+
+total2004=sum(walleyespawning$Maumee2004)
+
+total2005=sum(walleyespawning$Maumee2005)
+
+total2006=sum(walleyespawning$Maumee2006)
+
+prop2004=walleyespawning$Maumee2004/total2004
+
+prop2005=walleyespawning$Maumee2005/total2005
+
+prop2006=walleyespawning$Maumee2006/total2006
+
+walleyespawning=cbind(walleyespawning,prop2004,prop2005,prop2006)
+
+barplot(walleyespawning$prop2004,names.arg=walleyespawning$age,ylim=c(0,.30),ylab="Proportion", xlab="Age (y)", main="Proportion of Maumee River spawners in 2004")
+
+wpm=t(as.matrix(walleyespawning[5:7]))
+
+colnames(wpm)=walleyespawning$age
+
+colors=c("red","blue","green")
+
+barplot(wpm,main="Maumee River spawning by year",
+        ylab="Proportion", xlab = "Age (y)",beside=TRUE, col=colors,ylim=c(0,.25))
+
+
+barplot(wpm,main="Maumee River spawning by year",
+        ylab="Proportion", xlab = "Age (y)",beside=TRUE, col=colors,ylim=c(0,.25))
+
+legend("topright",  fill=colors,  legend=c("2004","2005","2006"))
+
+
+##Moose Data t-test
+
+moose=read.csv("isleroyale_data.csv",h=T)
+
+head(moose)
+
+nowolves=moose[moose$Wolves=="No",]
+
+wolves=moose[moose$Wolves=="Yes",]
+
+mean(wolves$Energy)
+
+sd(wolves$Energy)
+
+mean(nowolves$Energy)
+
+sd(nowolves$Energy)
+
+t.test(wolves$Energy,nowolves$Energy) ### Powerpoint
+
+
+## Moose Data ANOVA
+
+mooseanova=aov(Energy~Tickload,data=moose)
+
+summary(mooseanova) ### Powerpoint
+
+
+mooselm=lm(Energy~Tickload, data=moose)
+
+summary(mooselm)
+
+TukeyHSD(mooseanova) ### Powerpoint
+
+
+
+
+## Moose Data two-way ANOVA
+
+mooseanova2=aov(Energy~moose$Tickload*Wolves,     data=moose)
+
+summary(mooseanova2)
+
+mooselm2=lm(Energy~moose$Tickload*Wolves,     data=moose)
+
+summary(mooselm2)$r.squared
+
+TukeyHSD(mooseanova2)
+
+
+
+
+
+
+
